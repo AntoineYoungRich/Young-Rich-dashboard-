@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Young Rich — Dashboard</title>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div>
+          <div class="brand">YR</div>
+          <div class="title">Young Rich</div>
+          <div class="sub">Dashboard USDC.e • Aave • Compound • Yearn</div>
+        </div>
+
+        <div class="actionsTop">
+          <button id="btnConnect" class="btn">Connecter MetaMask</button>
+          <button id="btnRefresh" class="btn btnGhost" disabled>Actualiser</button>
+        </div>
+      </header>
+
+      <section class="bar">
+        <div class="pill" id="statusBadge">Prêt.</div>
+        <div class="meta">
+          <div>Wallet: <span id="addrText">—</span></div>
+          <div>Réseau requis: Polygon (<span id="chainText">137</span>)</div>
+          <div>Contrat: <span id="contractText">—</span></div>
+          <div>USDC.e: <span id="usdcText">—</span></div>
+        </div>
+      </section>
+
+      <main class="grid">
+        <section class="card">
+          <h2>Vue d’ensemble</h2>
+
+          <div class="kpi">
+            <div class="kpiItem">
+              <div class="kpiLabel">Solde net (toi)</div>
+              <div class="kpiValue"><span id="userNetText">—</span> <span class="unit">USDC.e</span></div>
+            </div>
+
+            <div class="kpiItem">
+              <div class="kpiLabel">Total géré (estim.)</div>
+              <div class="kpiValue"><span id="totalManagedText">—</span> <span class="unit">USDC.e</span></div>
+            </div>
+
+            <div class="kpiItem">
+              <div class="kpiLabel">Gains (estim.)</div>
+              <div class="kpiValue"><span id="earningsText">—</span> <span class="unit">USDC.e</span></div>
+            </div>
+
+            <div class="kpiItem">
+              <div class="kpiLabel">Idle (non investi)</div>
+              <div class="kpiValue"><span id="idleText">—</span> <span class="unit">USDC.e</span></div>
+            </div>
+          </div>
+
+          <div class="note">
+            Note : “estim.” = lecture calculée par le contrat. On peut ajouter ensuite une section “Proof (on-chain)” si tu veux.
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Répartition (estim.)</h2>
+
+          <div class="split">
+            <div class="row">
+              <div class="label">Aave</div>
+              <div class="val"><span id="aaveText">—</span> <span class="unit">USDC.e</span></div>
+            </div>
+
+            <div class="row">
+              <div class="label">Compound</div>
+              <div class="val"><span id="compoundText">—</span> <span class="unit">USDC.e</span></div>
+            </div>
+
+            <div class="row">
+              <div class="label">Yearn</div>
+              <div class="val"><span id="yearnText">—</span> <span class="unit">USDC.e</span></div>
+            </div>
+          </div>
+
+          <div class="note">
+            Si tu veux, on ajoute un bouton “Audit / Proof” plus tard (aToken / Comet / Vault shares).
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Actions</h2>
+
+          <div class="form">
+            <label class="field">
+              <span>Montant (USDC.e)</span>
+              <input id="amountInput" placeholder="ex: 0.05" inputmode="decimal" />
+            </label>
+
+            <div class="mini">
+              <div>Max retirable : <span id="maxWithdrawText">—</span> <span class="unit">USDC.e</span></div>
+              <div>Dernière transaction : <span id="lastTxText">—</span></div>
+            </div>
+
+            <div class="btnRow">
+              <button id="btnDeposit" class="btn btnGold" disabled>Déposer</button>
+              <button id="btnWithdraw" class="btn btnGhost" disabled>Retirer</button>
+            </div>
+
+            <div class="note small">
+              Sécurité : aucune clé privée stockée. Tout passe par MetaMask (lecture + transactions signées).
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>

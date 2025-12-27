@@ -1,0 +1,17 @@
+{
+  "name": "young-rich-dashboard-fr",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ethers": "^6.13.4"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
