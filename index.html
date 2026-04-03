@@ -4,6 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Young Rich — Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+      :root{--bg:#0b0620;--card:#120a2e;--border:rgba(255,255,255,.10);--text:#f5f1ff;--muted:rgba(245,241,255,.72);--gold:#d7b35f;--gold2:#f3d890;}
+      *{box-sizing:border-box;}html,body{height:100%;}
+      body{margin:0;background:radial-gradient(1200px 800px at 20% 0%,rgba(215,179,95,.14),transparent 60%),radial-gradient(900px 700px at 90% 10%,rgba(125,72,255,.18),transparent 60%),var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+      .wrap{max-width:1100px;margin:0 auto;padding:24px;}
+      .top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;}
+      .brand{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(215,179,95,.12);border:1px solid rgba(215,179,95,.25);color:var(--gold2);font-weight:800;}
+      .title{font-size:22px;font-weight:800;margin-top:6px;}.sub{color:var(--muted);margin-top:4px;}
+      .actionsTop{display:flex;gap:10px;flex-wrap:wrap;}
+      .bar{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:14px;border:1px solid var(--border);background:rgba(18,10,46,.65);border-radius:18px;margin-bottom:18px;}
+      .pill{padding:8px 12px;border-radius:999px;border:1px solid rgba(215,179,95,.25);background:rgba(215,179,95,.10);color:var(--gold2);font-weight:700;white-space:nowrap;}
+      .meta{color:var(--muted);display:grid;gap:6px;font-size:13px;}
+      .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;}
+      @media(max-width:900px){.grid{grid-template-columns:1fr;}.bar{flex-direction:column;}}
+      .card{border:1px solid var(--border);background:rgba(18,10,46,.65);border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.35);}
+      .card h2{margin:0 0 12px 0;font-size:18px;}
+      .kpi{display:grid;gap:10px;}
+      .kpiItem{padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);}
+      .kpiLabel{color:var(--muted);font-size:13px;}.kpiValue{font-size:20px;font-weight:900;margin-top:6px;}
+      .unit{color:rgba(215,179,95,.95);font-weight:800;font-size:12px;margin-left:6px;}
+      .split{display:grid;gap:10px;}
+      .row{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);}
+      .label{color:var(--muted);font-weight:700;}.val{font-weight:900;font-size:16px;}
+      .form{display:grid;gap:12px;}.field{display:grid;gap:8px;}.field span{color:var(--muted);font-weight:700;font-size:13px;}
+      input{padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.25);color:var(--text);outline:none;width:100%;}
+      input:focus{border-color:rgba(215,179,95,.55);}
+      .mini{display:grid;gap:6px;color:var(--muted);font-size:13px;}.btnRow{display:flex;gap:10px;flex-wrap:wrap;}
+      .btn{padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:var(--text);font-weight:800;cursor:pointer;}
+      .btn:disabled{opacity:.45;cursor:not-allowed;}
+      .btnGold{border-color:rgba(215,179,95,.45);background:linear-gradient(180deg,rgba(215,179,95,.22),rgba(215,179,95,.10));color:var(--gold2);}
+      .btnGhost{background:rgba(0,0,0,.22);}
+      .note{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.35;}.note.small{font-size:12px;}
+    </style>
   </head>
   <body>
     <div class="wrap">
@@ -13,7 +47,6 @@
           <div class="title">Young Rich</div>
           <div class="sub">Dashboard USDC.e • Aave • Compound • Yearn</div>
         </div>
-
         <div class="actionsTop">
           <button id="btnConnect" class="btn">Connecter MetaMask</button>
           <button id="btnRefresh" class="btn btnGhost" disabled>Actualiser</button>
@@ -32,87 +65,566 @@
 
       <main class="grid">
         <section class="card">
-          <h2>Vue d’ensemble</h2>
-
+          <h2>Vue d'ensemble</h2>
           <div class="kpi">
-            <div class="kpiItem">
-              <div class="kpiLabel">Solde net (toi)</div>
-              <div class="kpiValue"><span id="userNetText">—</span> <span class="unit">USDC.e</span></div>
-            </div>
-
-            <div class="kpiItem">
-              <div class="kpiLabel">Total géré (estim.)</div>
-              <div class="kpiValue"><span id="totalManagedText">—</span> <span class="unit">USDC.e</span></div>
-            </div>
-
-            <div class="kpiItem">
-              <div class="kpiLabel">Gains (estim.)</div>
-              <div class="kpiValue"><span id="earningsText">—</span> <span class="unit">USDC.e</span></div>
-            </div>
-
-            <div class="kpiItem">
-              <div class="kpiLabel">Idle (non investi)</div>
-              <div class="kpiValue"><span id="idleText">—</span> <span class="unit">USDC.e</span></div>
-            </div>
+            <div class="kpiItem"><div class="kpiLabel">Solde net (toi)</div><div class="kpiValue"><span id="userNetText">—</span><span class="unit">USDC.e</span></div></div>
+            <div class="kpiItem"><div class="kpiLabel">Total géré (estim.)</div><div class="kpiValue"><span id="totalManagedText">—</span><span class="unit">USDC.e</span></div></div>
+            <div class="kpiItem"><div class="kpiLabel">Gains (estim.)</div><div class="kpiValue"><span id="earningsText">—</span><span class="unit">USDC.e</span></div></div>
+            <div class="kpiItem"><div class="kpiLabel">Idle (non investi)</div><div class="kpiValue"><span id="idleText">—</span><span class="unit">USDC.e</span></div></div>
           </div>
-
-          <div class="note">
-            Note : “estim.” = lecture calculée par le contrat. On peut ajouter ensuite une section “Proof (on-chain)” si tu veux.
-          </div>
+          <div class="note">Note : "estim." = lecture calculée par le contrat.</div>
         </section>
 
         <section class="card">
           <h2>Répartition (estim.)</h2>
-
           <div class="split">
-            <div class="row">
-              <div class="label">Aave</div>
-              <div class="val"><span id="aaveText">—</span> <span class="unit">USDC.e</span></div>
-            </div>
-
-            <div class="row">
-              <div class="label">Compound</div>
-              <div class="val"><span id="compoundText">—</span> <span class="unit">USDC.e</span></div>
-            </div>
-
-            <div class="row">
-              <div class="label">Yearn</div>
-              <div class="val"><span id="yearnText">—</span> <span class="unit">USDC.e</span></div>
-            </div>
-          </div>
-
-          <div class="note">
-            Si tu veux, on ajoute un bouton “Audit / Proof” plus tard (aToken / Comet / Vault shares).
+            <div class="row"><div class="label">Aave</div><div class="val"><span id="aaveText">—</span><span class="unit">USDC.e</span></div></div>
+            <div class="row"><div class="label">Compound</div><div class="val"><span id="compoundText">—</span><span class="unit">USDC.e</span></div></div>
+            <div class="row"><div class="label">Yearn</div><div class="val"><span id="yearnText">—</span><span class="unit">USDC.e</span></div></div>
           </div>
         </section>
 
         <section class="card">
           <h2>Actions</h2>
-
           <div class="form">
             <label class="field">
               <span>Montant (USDC.e)</span>
               <input id="amountInput" placeholder="ex: 0.05" inputmode="decimal" />
             </label>
-
             <div class="mini">
-              <div>Max retirable : <span id="maxWithdrawText">—</span> <span class="unit">USDC.e</span></div>
+              <div>Max retirable : <span id="maxWithdrawText">—</span><span class="unit">USDC.e</span></div>
               <div>Dernière transaction : <span id="lastTxText">—</span></div>
             </div>
-
             <div class="btnRow">
               <button id="btnDeposit" class="btn btnGold" disabled>Déposer</button>
               <button id="btnWithdraw" class="btn btnGhost" disabled>Retirer</button>
             </div>
-
-            <div class="note small">
-              Sécurité : aucune clé privée stockée. Tout passe par MetaMask (lecture + transactions signées).
-            </div>
+            <div class="note small">Sécurité : aucune clé privée stockée. Tout passe par MetaMask.</div>
           </div>
         </section>
       </main>
     </div>
 
-    <script type="module" src="/src/app.js"></script>
+    <script>
+      const ABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "deposit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint16",
+				"name": "_aaveBP",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_compoundBP",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_yearnBP",
+				"type": "uint16"
+			}
+		],
+		"name": "setAlloc",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_usdcE",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_aavePool",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_aToken",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_compoundComet",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_yearnVault",
+				"type": "address"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_aaveBP",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_compoundBP",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_yearnBP",
+				"type": "uint16"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Deposit",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint16",
+				"name": "aaveBP",
+				"type": "uint16"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint16",
+				"name": "compoundBP",
+				"type": "uint16"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint16",
+				"name": "yearnBP",
+				"type": "uint16"
+			}
+		],
+		"name": "SetAlloc",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Withdraw",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "aaveBP",
+		"outputs": [
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "aavePool",
+		"outputs": [
+			{
+				"internalType": "contract IAaveV3Pool",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "aToken",
+		"outputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "compoundBP",
+		"outputs": [
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "compoundComet",
+		"outputs": [
+			{
+				"internalType": "contract ICompoundV3Comet",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "getDashboard",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "userNet",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalNet",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "idleUSDCe",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "aaveUSDCe",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "compoundUSDCe",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "yearnUSDCeEst",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalManagedEst",
+				"type": "uint256"
+			},
+			{
+				"internalType": "int256",
+				"name": "totalEarningsEst",
+				"type": "int256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getPositions",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "idleUSDCe",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "aaveUSDCe",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "compoundUSDCe",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "yearnUSDCeEst",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalNetDeposited",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "usdcE",
+		"outputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userNetDeposited",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "yearnBP",
+		"outputs": [
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "yearnVault",
+		"outputs": [
+			{
+				"internalType": "contract IERC4626",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+ ];
+
+      const CONTRACT_ADDRESS = "0x8E2199197a36fFd5C0ED2c0087ED44810691a834";
+      const CHAIN_ID = 137;
+
+      const $ = (id) => document.getElementById(id);
+      const setText = (id, text) => { const el = $(id); if (el) el.textContent = text; };
+
+      let provider, signer, user, contract, contractRead, usdc, usdcRead, usdcDec = 6;
+
+      const ERC20_ABI = [
+        "function approve(address,uint256) returns (bool)",
+        "function allowance(address,address) view returns (uint256)",
+        "function balanceOf(address) view returns (uint256)",
+        "function decimals() view returns (uint8)",
+      ];
+
+      const shortAddr = a => a ? a.slice(0,6)+"…"+a.slice(-4) : "—";
+      const setStatus = t => setText("statusBadge", t);
+      const enableActions = on => {
+        ["btnRefresh","btnDeposit","btnWithdraw"].forEach(id => $(id).disabled = !on);
+      };
+
+      async function ensurePolygon(){
+        const net = await provider.getNetwork();
+        if (Number(net.chainId) !== CHAIN_ID)
+          throw new Error("Mauvais réseau — passe sur Polygon");
+      }
+
+      async function bootstrapContracts(){
+        contractRead = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+        contract     = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+        const usdcAddr = await contractRead.usdcE();
+        usdcRead = new ethers.Contract(usdcAddr, ERC20_ABI, provider);
+        usdc     = new ethers.Contract(usdcAddr, ERC20_ABI, signer);
+        usdcDec  = Number(await usdcRead.decimals().catch(()=>6));
+        setText("contractText", shortAddr(CONTRACT_ADDRESS));
+        setText("usdcText", shortAddr(usdcAddr));
+      }
+
+      async function refreshDashboard(){
+        try {
+          if (!provider || !user){ setStatus("Connecte MetaMask"); return; }
+          await ensurePolygon();
+          if (!contractRead) await bootstrapContracts();
+          const d = await contractRead.getDashboard(user);
+          setText("userNetText",      ethers.utils.formatUnits(d[0], usdcDec));
+          setText("totalManagedText", ethers.utils.formatUnits(d[6], usdcDec));
+          const neg = d[7] < 0;
+          setText("earningsText", (neg?"-":"+")+ethers.utils.formatUnits(neg?d[7].mul(-1):d[7], usdcDec));
+          setText("idleText",     ethers.utils.formatUnits(d[2], usdcDec));
+          setText("aaveText",     ethers.utils.formatUnits(d[3], usdcDec));
+          setText("compoundText", ethers.utils.formatUnits(d[4], usdcDec));
+          setText("yearnText",    ethers.utils.formatUnits(d[5], usdcDec));
+          setText("maxWithdrawText", ethers.utils.formatUnits(d[0], usdcDec));
+          setText("addrText", shortAddr(user));
+          setText("chainText", String(CHAIN_ID));
+          setStatus("OK ✓");
+          enableActions(true);
+        } catch(e){
+          console.error(e);
+          setStatus("Erreur refresh : "+e.message);
+          enableActions(false);
+        }
+      }
+
+      async function connectWallet(){
+        try {
+          if (!window.ethereum) throw new Error("MetaMask non détecté");
+          provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+          await provider.send("eth_requestAccounts", []);
+          signer = provider.getSigner();
+          user   = await signer.getAddress();
+          await ensurePolygon();
+          await bootstrapContracts();
+          setStatus("Connecté");
+          enableActions(true);
+          await refreshDashboard();
+        } catch(e){
+          console.error(e);
+          setStatus("Erreur : "+e.message);
+          enableActions(false);
+        }
+      }
+
+      async function doDeposit(){
+        try {
+          await ensurePolygon();
+          const raw = ($("amountInput").value||"").trim().replace(",",".");
+          const amt = ethers.utils.parseUnits(raw, usdcDec);
+          const allowance = await usdcRead.allowance(user, CONTRACT_ADDRESS);
+          if (allowance.lt(amt)){
+            setStatus("Approval…");
+            const tx = await usdc.approve(CONTRACT_ADDRESS, amt);
+            await tx.wait();
+          }
+          setStatus("Dépôt…");
+          const tx = await contract.deposit(amt);
+          setText("lastTxText", tx.hash);
+          await tx.wait();
+          setStatus("Dépôt OK ✓");
+          await refreshDashboard();
+        } catch(e){ console.error(e); setStatus("Erreur dépôt : "+e.message); }
+      }
+
+      async function doWithdraw(){
+        try {
+          await ensurePolygon();
+          const raw = ($("amountInput").value||"").trim().replace(",",".");
+          const amt = ethers.utils.parseUnits(raw, usdcDec);
+          setStatus("Retrait…");
+          const tx = await contract.withdraw(amt);
+          setText("lastTxText", tx.hash);
+          await tx.wait();
+          setStatus("Retrait OK ✓");
+          await refreshDashboard();
+        } catch(e){ console.error(e); setStatus("Erreur retrait : "+e.message); }
+      }
+
+      window.addEventListener("load", () => {
+        setText("contractText", shortAddr(CONTRACT_ADDRESS));
+        setText("chainText", String(CHAIN_ID));
+        $("btnConnect").addEventListener("click", connectWallet);
+        $("btnRefresh").addEventListener("click", refreshDashboard);
+        $("btnDeposit").addEventListener("click", doDeposit);
+        $("btnWithdraw").addEventListener("click", doWithdraw);
+        enableActions(false);
+        setStatus("Prêt.");
+      });
+    </script>
   </body>
 </html>
