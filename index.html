@@ -106,423 +106,39 @@
     </div>
 
     <script>
-      const ABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "deposit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint16",
-				"name": "_aaveBP",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "_compoundBP",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "_yearnBP",
-				"type": "uint16"
-			}
-		],
-		"name": "setAlloc",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_usdcE",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_aavePool",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_aToken",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_compoundComet",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_yearnVault",
-				"type": "address"
-			},
-			{
-				"internalType": "uint16",
-				"name": "_aaveBP",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "_compoundBP",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint16",
-				"name": "_yearnBP",
-				"type": "uint16"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "Deposit",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "aaveBP",
-				"type": "uint16"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "compoundBP",
-				"type": "uint16"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint16",
-				"name": "yearnBP",
-				"type": "uint16"
-			}
-		],
-		"name": "SetAlloc",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "withdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "Withdraw",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "aaveBP",
-		"outputs": [
-			{
-				"internalType": "uint16",
-				"name": "",
-				"type": "uint16"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "aavePool",
-		"outputs": [
-			{
-				"internalType": "contract IAaveV3Pool",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "aToken",
-		"outputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "compoundBP",
-		"outputs": [
-			{
-				"internalType": "uint16",
-				"name": "",
-				"type": "uint16"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "compoundComet",
-		"outputs": [
-			{
-				"internalType": "contract ICompoundV3Comet",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			}
-		],
-		"name": "getDashboard",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "userNet",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "totalNet",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "idleUSDCe",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "aaveUSDCe",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "compoundUSDCe",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "yearnUSDCeEst",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "totalManagedEst",
-				"type": "uint256"
-			},
-			{
-				"internalType": "int256",
-				"name": "totalEarningsEst",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getPositions",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "idleUSDCe",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "aaveUSDCe",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "compoundUSDCe",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "yearnUSDCeEst",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "totalNetDeposited",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "usdcE",
-		"outputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "userNetDeposited",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "yearnBP",
-		"outputs": [
-			{
-				"internalType": "uint16",
-				"name": "",
-				"type": "uint16"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "yearnVault",
-		"outputs": [
-			{
-				"internalType": "contract IERC4626",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
- ];
-
       const CONTRACT_ADDRESS = "0x8E2199197a36fFd5C0ED2c0087ED44810691a834";
       const CHAIN_ID = 137;
 
-      const $ = (id) => document.getElementById(id);
-      const setText = (id, text) => { const el = $(id); if (el) el.textContent = text; };
-
-      let provider, signer, user, contract, contractRead, usdc, usdcRead, usdcDec = 6;
+      const ABI = [
+        {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},
+        {"inputs":[{"internalType":"uint16","name":"_aaveBP","type":"uint16"},{"internalType":"uint16","name":"_compoundBP","type":"uint16"},{"internalType":"uint16","name":"_yearnBP","type":"uint16"}],"name":"setAlloc","outputs":[],"stateMutability":"nonpayable","type":"function"},
+        {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},
+        {"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getDashboard","outputs":[{"internalType":"uint256","name":"userNet","type":"uint256"},{"internalType":"uint256","name":"totalNet","type":"uint256"},{"internalType":"uint256","name":"idleUSDCe","type":"uint256"},{"internalType":"uint256","name":"aaveUSDCe","type":"uint256"},{"internalType":"uint256","name":"compoundUSDCe","type":"uint256"},{"internalType":"uint256","name":"yearnUSDCeEst","type":"uint256"},{"internalType":"uint256","name":"totalManagedEst","type":"uint256"},{"internalType":"int256","name":"totalEarningsEst","type":"int256"}],"stateMutability":"view","type":"function"},
+        {"inputs":[],"name":"usdcE","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+        {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+        {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userNetDeposited","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+        {"inputs":[],"name":"totalNetDeposited","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+      ];
 
       const ERC20_ABI = [
         "function approve(address,uint256) returns (bool)",
         "function allowance(address,address) view returns (uint256)",
         "function balanceOf(address) view returns (uint256)",
-        "function decimals() view returns (uint8)",
+        "function decimals() view returns (uint8)"
       ];
 
-      const shortAddr = a => a ? a.slice(0,6)+"…"+a.slice(-4) : "—";
+      const $ = id => document.getElementById(id);
+      const setText = (id, text) => { const el = $(id); if (el) el.textContent = text; };
       const setStatus = t => setText("statusBadge", t);
-      const enableActions = on => {
-        ["btnRefresh","btnDeposit","btnWithdraw"].forEach(id => $(id).disabled = !on);
-      };
+      const enableActions = on => ["btnRefresh","btnDeposit","btnWithdraw"].forEach(id => $(id).disabled = !on);
+      const shortAddr = a => a ? a.slice(0,6)+"…"+a.slice(-4) : "—";
+
+      let provider, signer, user, contract, contractRead, usdc, usdcRead, usdcDec = 6;
 
       async function ensurePolygon(){
         const net = await provider.getNetwork();
         if (Number(net.chainId) !== CHAIN_ID)
-          throw new Error("Mauvais réseau — passe sur Polygon");
+          throw new Error("Mauvais réseau — passe sur Polygon dans MetaMask");
       }
 
       async function bootstrapContracts(){
@@ -531,33 +147,39 @@
         const usdcAddr = await contractRead.usdcE();
         usdcRead = new ethers.Contract(usdcAddr, ERC20_ABI, provider);
         usdc     = new ethers.Contract(usdcAddr, ERC20_ABI, signer);
-        usdcDec  = Number(await usdcRead.decimals().catch(()=>6));
+        usdcDec  = Number(await usdcRead.decimals().catch(() => 6));
         setText("contractText", shortAddr(CONTRACT_ADDRESS));
         setText("usdcText", shortAddr(usdcAddr));
       }
 
+      function formatInt256(val){
+        // ethers v5 returns BigNumber for int256
+        const neg = val.isNegative();
+        const abs = neg ? val.mul(-1) : val;
+        return (neg ? "-" : "+") + ethers.utils.formatUnits(abs, usdcDec);
+      }
+
       async function refreshDashboard(){
         try {
-          if (!provider || !user){ setStatus("Connecte MetaMask"); return; }
+          if (!provider || !user){ setStatus("Connecte MetaMask d'abord"); return; }
           await ensurePolygon();
           if (!contractRead) await bootstrapContracts();
           const d = await contractRead.getDashboard(user);
           setText("userNetText",      ethers.utils.formatUnits(d[0], usdcDec));
           setText("totalManagedText", ethers.utils.formatUnits(d[6], usdcDec));
-          const neg = d[7] < 0;
-          setText("earningsText", (neg?"-":"+")+ethers.utils.formatUnits(neg?d[7].mul(-1):d[7], usdcDec));
-          setText("idleText",     ethers.utils.formatUnits(d[2], usdcDec));
-          setText("aaveText",     ethers.utils.formatUnits(d[3], usdcDec));
-          setText("compoundText", ethers.utils.formatUnits(d[4], usdcDec));
-          setText("yearnText",    ethers.utils.formatUnits(d[5], usdcDec));
-          setText("maxWithdrawText", ethers.utils.formatUnits(d[0], usdcDec));
-          setText("addrText", shortAddr(user));
+          setText("earningsText",     formatInt256(d[7]));
+          setText("idleText",         ethers.utils.formatUnits(d[2], usdcDec));
+          setText("aaveText",         ethers.utils.formatUnits(d[3], usdcDec));
+          setText("compoundText",     ethers.utils.formatUnits(d[4], usdcDec));
+          setText("yearnText",        ethers.utils.formatUnits(d[5], usdcDec));
+          setText("maxWithdrawText",  ethers.utils.formatUnits(d[0], usdcDec));
+          setText("addrText",  shortAddr(user));
           setText("chainText", String(CHAIN_ID));
           setStatus("OK ✓");
           enableActions(true);
         } catch(e){
-          console.error(e);
-          setStatus("Erreur refresh : "+e.message);
+          console.error("refresh error", e);
+          setStatus("Erreur : " + e.message);
           enableActions(false);
         }
       }
@@ -569,50 +191,63 @@
           await provider.send("eth_requestAccounts", []);
           signer = provider.getSigner();
           user   = await signer.getAddress();
+          setText("addrText", shortAddr(user));
+          setText("contractText", shortAddr(CONTRACT_ADDRESS));
           await ensurePolygon();
           await bootstrapContracts();
-          setStatus("Connecté");
+          setStatus("Connecté ✓");
           enableActions(true);
           await refreshDashboard();
         } catch(e){
-          console.error(e);
-          setStatus("Erreur : "+e.message);
+          console.error("connect error", e);
+          setStatus("Erreur : " + e.message);
           enableActions(false);
         }
       }
 
       async function doDeposit(){
         try {
+          if (!contract || !usdc) throw new Error("Pas connecté");
           await ensurePolygon();
-          const raw = ($("amountInput").value||"").trim().replace(",",".");
+          const raw = ($("amountInput").value || "").trim().replace(",", ".");
+          if (!raw) throw new Error("Entre un montant");
           const amt = ethers.utils.parseUnits(raw, usdcDec);
           const allowance = await usdcRead.allowance(user, CONTRACT_ADDRESS);
           if (allowance.lt(amt)){
-            setStatus("Approval…");
+            setStatus("Approval USDC.e…");
             const tx = await usdc.approve(CONTRACT_ADDRESS, amt);
+            setText("lastTxText", tx.hash);
             await tx.wait();
           }
-          setStatus("Dépôt…");
+          setStatus("Dépôt en cours…");
           const tx = await contract.deposit(amt);
           setText("lastTxText", tx.hash);
           await tx.wait();
           setStatus("Dépôt OK ✓");
           await refreshDashboard();
-        } catch(e){ console.error(e); setStatus("Erreur dépôt : "+e.message); }
+        } catch(e){
+          console.error("deposit error", e);
+          setStatus("Erreur dépôt : " + e.message);
+        }
       }
 
       async function doWithdraw(){
         try {
+          if (!contract) throw new Error("Pas connecté");
           await ensurePolygon();
-          const raw = ($("amountInput").value||"").trim().replace(",",".");
+          const raw = ($("amountInput").value || "").trim().replace(",", ".");
+          if (!raw) throw new Error("Entre un montant");
           const amt = ethers.utils.parseUnits(raw, usdcDec);
-          setStatus("Retrait…");
+          setStatus("Retrait en cours…");
           const tx = await contract.withdraw(amt);
           setText("lastTxText", tx.hash);
           await tx.wait();
           setStatus("Retrait OK ✓");
           await refreshDashboard();
-        } catch(e){ console.error(e); setStatus("Erreur retrait : "+e.message); }
+        } catch(e){
+          console.error("withdraw error", e);
+          setStatus("Erreur retrait : " + e.message);
+        }
       }
 
       window.addEventListener("load", () => {
